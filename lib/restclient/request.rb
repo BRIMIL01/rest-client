@@ -54,6 +54,7 @@ module RestClient
       @ssl_client_cert = args[:ssl_client_cert] || nil
       @ssl_client_key = args[:ssl_client_key] || nil
       @ssl_ca_file = args[:ssl_ca_file] || nil
+      @binmode = args[:binmode] || false
       @tf = nil # If you are a raw request, this is your tempfile
       @max_redirects = args[:max_redirects] || 10
       @processed_headers = make_headers headers
@@ -198,6 +199,7 @@ module RestClient
         # Stolen from http://www.ruby-forum.com/topic/166423
         # Kudos to _why!
         @tf = Tempfile.new("rest-client")
+        @tf.binmode if @binmode
         size, total = 0, http_response.header['Content-Length'].to_i
         http_response.read_body do |chunk|
           @tf.write chunk
